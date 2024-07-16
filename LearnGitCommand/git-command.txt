@@ -1,0 +1,20 @@
+##### Config Git info
+git config --global user.name "MiddleNatural"
+git config --global user.email "middlenatural@gmail.com"
+##### End
+
+
+#Check file change list
+git status
+
+#Add file change to staged
+git add .
+
+(optional) #Remove file change from staged
+git restore --staged .vscode/launch.json
+
+#Commit file change
+git commit -m "<commit message>"
+
+#Push file change to remote (origin)
+git push
