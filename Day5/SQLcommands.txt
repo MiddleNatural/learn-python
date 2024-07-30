@@ -1,0 +1,34 @@
+CREATE TABLE customers (
+    id int NOT NULL AUTO_INCREMENT,
+    email varchar(255),
+    name varchar(255),
+    balance int,
+    PRIMARY KEY (id)
+);
+
+DROP TABLE customers
+
+INSERT INTO customers (email,name,balance)
+VALUES ("customer1@mail.com","Customer1",1000);
+INSERT INTO customers (email,name,balance)
+VALUES ("customer2@mail.com","Customer2",2000);
+INSERT INTO customers (email,name,balance)
+VALUES ("customer3@mail.com","Customer3",3000);
+INSERT INTO customers (email,name,balance)
+VALUES ("customer4@mail.com","Customer4",4000);
+INSERT INTO customers (email,name,balance)
+VALUES ("customer5@mail.com","Customer5",5000);
+
+SELECT * FROM customers;
+
+SELECT id, email, name FROM customers;
+
+SELECT id, email, name FROM customers
+WHERE email ='customer1@mail.com';
+
+UPDATE customers
+SET balance = 10000000
+WHERE email = 'customer1@mail.com';
+
+DELETE FROM customers 
+WHERE email='customer2@mail.com';
