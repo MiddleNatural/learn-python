@@ -1,0 +1,191 @@
+-----------------------------------
+|0) Task: BA customer requirement |
+|1) Design DATABASE               |
+|2) Solution                      |
+|3) Dev                           |
+-----------------------------------
+
+SQL knowledge
++ database server (execute SQL command)
++ database management tool (input SQL command)
++ database connect URL: jdbc:mysql://localhost:3306
++ column name must not use keyword belong to SQL
++ default column of table is nullable
++ Warning never execute SQL without WHERE: SELECT * FROM customers
+
+===================================== SQL Joins =====================================
++ There are 1 types of the JOINs in SQL:
+
+(INNER) JOIN: Returns records that have matching values in both tables
+
+===================================== SQL relations =====================================
+https://www.geeksforgeeks.org/relationships-in-sql-one-to-one-one-to-many-many-to-many/
++ There are 3 types of the relation in SQL:
+
+Define: PRIMARY KEY and FOREIGN KEY is a special column
+The PRIMARY KEY constraint uniquely identifies each record in a table, 
+	this primary key can single or consist of multiple columns.
+A FOREIGN KEY is a field in one table, that refers (constraint) to the PRIMARY KEY in another table.
+
+==================== TYPE1: One-To-One ====================
+Important: SQL relation has (1)main (1)secondary
+requirement: 1 customer must has 1 transaction
+table customers
+table transactions
+
+CREATE TABLE customers (
+    id int NOT NULL AUTO_INCREMENT,
+    email varchar(255),
+    name varchar(255),
+    balance int,
+	transactionId int NOT NULL,
+	FOREIGN KEY (transactionId) REFERENCES transactions(id),
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE transactions (
+    id int NOT NULL AUTO_INCREMENT,
+    transactionTime DATETIME,
+    increaseAmount int,
+	decreaseAmount int,
+    PRIMARY KEY (id)
+);
+
+INSERT INTO customers (email,name,balance,transactionId)
+VALUES ("customer1@mail.com","Customer1",1000,1);
+
+INSERT INTO transactions (transactionTime,increaseAmount,decreaseAmount)
+VALUES ("2024-08-08 11:14:00",1000,0);
+
+INSERT INTO transactions (transactionTime,increaseAmount,decreaseAmount)
+VALUES ("2024-08-08 16:17:00",2000,0);
+
+select * 
+FROM customers JOIN transactions
+ON customers.transactionId=transactions.id
+
+select customers.id, customers.email, customers.name, customers.balance, transactions.transactionTime, transactions.increaseAmount, transactions.decreaseAmount 
+FROM customers JOIN transactions
+ON customers.transactionId=transactions.id
+
+select c.id, c.email, c.name, c.balance, t.transactionTime, t.increaseAmount, t.decreaseAmount 
+FROM customers as c JOIN transactions as t
+ON c.transactionId=t.id
+
+DELETE FROM transactions 
+WHERE id=2;
+
+==================== TYPE2: One-To-Many ====================
+Important: SQL relation has (1)main (1)secondary
+Important: translate from human language to SQL 
+human language -> 1 class contain a list of student
+SQL language   -> 1 student belong to 1 class
+
+table students
+table classes
+
+CREATE TABLE students (
+    id int NOT NULL AUTO_INCREMENT,
+    name varchar(255),
+    age int,
+    phoneNumber varchar(255),
+	classId int NOT NULL,
+	FOREIGN KEY (classId) REFERENCES classes(id),
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE classes (
+    id int NOT NULL AUTO_INCREMENT,
+    name varchar(255),
+    studentNumber int,
+    PRIMARY KEY (id)
+);
+
+INSERT INTO classes (name,studentNumber)
+VALUES ("8CA1",2);
+
+INSERT INTO students (name,age,phoneNumber,classId)
+VALUES ("Student1",10,"123456789",1);
+
+INSERT INTO students (name,age,phoneNumber,classId)
+VALUES ("Student2",10,"223456789",1);
+
+INSERT INTO classes (name,studentNumber)
+VALUES ("8CA2",2);
+
+INSERT INTO students (name,age,phoneNumber,classId)
+VALUES ("Student3",10,"323456789",2);
+
+# get all student
+select s.id, s.name , s.age , s.phoneNumber , c.name
+FROM students as s JOIN classes as c
+ON s.classId=c.id
+
+# get all student of class 8CA1
+select s.id as StudentID, s.name , s.age , s.phoneNumber , c.name
+FROM students as s JOIN classes as c ON s.classId=c.id
+where c.name like '8CA1'
+
+==================== TYPE3: Many-To-Many ====================
+Important: SQL relation has reverse link between 2 objects
+human language (ecommerce) 
+-> 1 category has multi products, 1 product belong to multi categories
+human language (school)
+-> 1 student can study multiple subjects, 1 subject can be learnt by multiple students
+SQL language -> create relation table bewteen student and subject
+
+table students -> studentId
+table subjects -> subjectId
+table studentSubjectRelation -> relation studentId and subjectId
+
+CREATE TABLE students (
+    id int NOT NULL AUTO_INCREMENT,
+    name varchar(255),
+    age int,
+    phoneNumber varchar(255),
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE subjects (
+    id int NOT NULL AUTO_INCREMENT,
+    name varchar(255),
+    PRIMARY KEY (id)
+);
+
+// Note: PRIMARY KEY will combine of all FOREIGN KEY
+CREATE TABLE studentSubjectRelation (
+    studentId int,
+    subjectId int,
+    PRIMARY KEY (student_id, subjectId),
+    FOREIGN KEY (student_id) REFERENCES students(id),
+    FOREIGN KEY (subjectId) REFERENCES subjects(id));
+);
+
+Example:
+Student1
+Student2
+
+Subject1
+Subject2
+Subject3
+-> 1 student can study multiple subjects
+Student1 <-> Subject1
+Student1 <-> Subject2
+
+Student2 <-> Subject1
+Student2 <-> Subject2
+Student2 <-> Subject3
+-----------------------
+-> 1 subject can be learnt by multiple students
+Subject1 <-> Student1
+Subject1 <-> Student2
+
+Subject2 <-> Student1
+Subject2 <-> Student2
+
+Subject3 <-> Student2
+
+select stu.id as StudentID, stu.name , sub.name
+FROM students as stu 
+JOIN studentSubjectRelation as rel ON rel.studentId=s.id
+JOIN subjects as sub ON rel.studentId=sub.id
