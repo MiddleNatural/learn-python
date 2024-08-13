@@ -1,0 +1,9 @@
+Requirement: List of hospital (name, employees) of the region which has an area larger than 10,000 km squared
+whilst having at least 60,000 patients in the mental aspect all year around after 2018.
+SQL solution:
+select h.ID, h.name, h.employees FROM hospital AS h JOIN region AS r ON h.regionID = r.ID
+JOIN primaryCareUse as pcu ON r.ID = pcu.regionID
+WHERE r.area > 10,000 AND pcu.mental > 60,000 AND pcu,year > 2018
+
+1. Select h.healthregion FROM hospital AS h WHERE h.healthregion like "Vest"
+2. Select r.name FROM region

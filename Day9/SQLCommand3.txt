@@ -1,0 +1,60 @@
+============== SUBQUERIES ==============
+
+A subquery is a query that is nested inside another query, or inside another subquery. 
+(Like a Python nested function / variable)
+Subquery will run before main query.
+Subquery normally dont have have relation with main query.
+
+++ SINGLE VALUE
+The simplest subquery returns exactly one column and exactly one row. 
+It can be used with comparison operators =, <, <=, >, or >=.
+SELECT name
+FROM city
+WHERE rating = (
+  SELECT rating
+  FROM city
+  WHERE name = 'Paris'
+);
+
+++ MULTIPLE VALUES
+A subquery can also return multiple columns or multiple rows. 
+Such subqueries can be used with operators IN, EXISTS, ALL, or ANY.
+SELECT name
+FROM city
+WHERE country_id IN (
+  SELECT country_id
+  FROM country
+  WHERE population > 20000000
+);
+
+============== Indexes ==============
+SQL Indexes are special lookup tables that are used to speed up the process of data retrieval.
+They hold pointers that refer to the data stored in a database, 
+which makes it easier to locate the required data records in a database table.
+
+++Unique Indexes
+Unique indexes are used not only for performance, but also for data integrity.
+A unique index does not allow any duplicate values to be inserted into the table.
+
+============== SQL AGGREGATE FUNCTIONS ==============
+
+avg(expr) − average value for rows within the group
+count(expr) − count of values for rows within the group
+max(expr) − maximum value within the group
+min(expr) − minimum value within the group
+sum(expr) − sum of values within the group
+
+============== GROUP BY ==============
+The GROUP BY clause is typically used with aggregate functions.
+The main purpose of grouping the records of a table based on particular columns is to PERFORM CALCULATIONS on these groups. 
+
+++GROUP BY Clause on Single Columns
+When we use the GROUP BY clause with a single column, 
+all the rows in the table that HAVE THE SAME VALUE in that particular column will be merged into a single record.
+
+++GROUP BY Clause with Multiple Columns
+When we use the GROUP BY clause with multiple columns, 
+all the rows in the table that HAVE THE SAME VALUES in all of the specified columns will be merged into a single group.
+
+++GROUP BY with HAVING Clause
+To FILTER THE GROUPED DATA in a table based on specific criteria.
