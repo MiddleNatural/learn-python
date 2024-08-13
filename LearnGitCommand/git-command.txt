@@ -3,6 +3,9 @@ git config --global user.name "MiddleNatural"
 git config --global user.email "middlenatural@gmail.com"
 ##### End
 
+--------------------------------------------------
+|Local Change -> Staged > Commited -> Push origin|
+--------------------------------------------------
 
 #Check file change list
 git status
